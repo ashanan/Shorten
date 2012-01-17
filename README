@@ -1,1 +1,6 @@
 This project is an attempt to explore various programming languages by writing the same non-trivial program (a url shortener) in a bunch of different ones.
+
+Added the following rewrite rule in my apache configuration so that all paths starting with an underscore redirect to the script that handles the actual redirection.
+
+	RewriteRule ^/_(.*)$ http://ashanan.com/shorten/php/redirect.php?id=$1
+
