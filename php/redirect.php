@@ -10,7 +10,8 @@ try{
 
 	$row = $statement->fetch(PDO::FETCH_ASSOC);
 	if($row){
-		print_r($row);
+	//	print_r($row);
+		header('Location: ' .  $row['full_url']);
 	}
 	else{
 		echo "404";
@@ -20,6 +21,5 @@ catch(PDOException $e){
 	print "Error: " . $e.getMessage();
 	die();
 }
-echo $_GET['id'];
 
 ?>
