@@ -39,14 +39,15 @@ function generateURL(&$pdo){
 try{
 	$pdo = new PDO('mysql:host=' . $SERVER  . ';dbname='. $DATABASE, $USER, $PASSWORD);
 	$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	//TODO: use prepared statements
-	$statement = $pdo->query("SELECT count(*) FROM urls WHERE full_url = '" . $_POST['full-url'] . "';");
-	$row = $statement->fetch(PDO::FETCH_ASSOC);
-//	print_r($row);
-	echo 'length: ' . $row['count(*)'];
+	
+	$statement = $pdo->prepare("SELECT count(*) FROM urls WHERE full_url = ?");
+	$statement->execute(array($_POST['full-url']));
+	$row = $statement->fetch();
+	print_r($row);	
 	if($row['count(*)'] > 0){
-		$statement = $pdo->query("SELECT short_url FROM urls WHERE full_url ='" . $_POST['full-url']  . "';");
-		$row = $statement->fetch(PDO::FETCH_ASSOC);
+		$statement = $pdo->prepare("SELECT short_url FROM urls WHERE full_url = ?;");
+		$statement->execute(array($_POST['full-url']));
+		$row = $statement->fetch();
 		print_r($row);
 		echo 'short: ' . $row['short_url'];
 	} 
@@ -54,8 +55,10 @@ try{
 		$statement->closeCursor();
 		$short_url = generateURL($pdo);
 		echo 'url: ' .$short_url;
-		$query = "INSERT INTO urls (full_url, short_url) values('" . $_POST['full-url']  . "','" . $short_url  . "');";
-		$pdo->query($query);
+		$statement = $pdo->prepare("INSERT INTO urls (full_url, short_url) values(:full_url, :short_url);");
+		$statement->bindParam(':full_url', $_POST['full-url']);
+		$statement->bindParam(':short_url', $short_url);
+		$statement->execute();
 	}
 	$pdo = null;
 }
