@@ -14,7 +14,7 @@ try{
 		header('Location: ' .  $row['full_url']);
 	}
 	else{
-		echo "404";
+		echo "I'm sorry, we can't find the URL you're looking for.";
 	}
 }
 catch(PDOException $e){
