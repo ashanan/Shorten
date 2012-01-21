@@ -2,6 +2,8 @@
 include('config.php');
 //print_r($_POST['full-url']);
 
+$urlPrefix = 'http://www.ashanan.com/_'; // rewrite rules use '/_' to detect shortened urls
+
 function generateURL(&$pdo){
 	$validURLchars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 
@@ -43,24 +45,27 @@ try{
 	$statement = $pdo->prepare("SELECT count(*) FROM urls WHERE full_url = ?");
 	$statement->execute(array($_POST['full-url']));
 	$row = $statement->fetch();
-	print_r($row);	
+//	print_r($row);	
 	if($row['count(*)'] > 0){
 		$statement = $pdo->prepare("SELECT short_url FROM urls WHERE full_url = ?;");
 		$statement->execute(array($_POST['full-url']));
 		$row = $statement->fetch();
-		print_r($row);
-		echo 'short: ' . $row['short_url'];
+		
+		$ret_url = $urlPrefix . $row['short_url'];
 	} 
 	else{
-		$statement->closeCursor();
 		$short_url = generateURL($pdo);
-		echo 'url: ' .$short_url;
+		$ret_url = $urlPrefix . $short_url;
+
+		$statement->closeCursor();
 		$statement = $pdo->prepare("INSERT INTO urls (full_url, short_url) values(:full_url, :short_url);");
 		$statement->bindParam(':full_url', $_POST['full-url']);
 		$statement->bindParam(':short_url', $short_url);
 		$statement->execute();
 	}
 	$pdo = null;
+
+	echo 'The shortened URL for "' . $_POST['full-url'] . '" is: <a href="' . $ret_url .'">' .  $ret_url . '</a>.';
 }
 catch(PDOException $e){
 	print "Error: " . $e.getMessage();
