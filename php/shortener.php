@@ -1,3 +1,18 @@
+<html>
+  <head>
+    <title>Avner Shanan - Software Engineer</title>
+    <link href="../../styles.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="centeredmenu">
+      <ul id="menu">
+        <li><a href="/" >Home</a></li>
+        <li><a href="/projects.html">Projects</a></li>
+        <li><a href="/cv.html">CV</a></li>
+      </ul>
+    </div>
+    <div id="content">
+      <p style="text-align:center;">
 <?php
 include('config.php');
 //print_r($_POST['full-url']);
@@ -73,3 +88,7 @@ catch(PDOException $e){
 }
 
 ?>
+      </p>
+    </div>
+  </body>
+</html>
