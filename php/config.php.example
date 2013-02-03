@@ -1,0 +1,8 @@
+<?php
+
+$SERVER = "your_server";
+$DATABASE = "your_database";
+$USER = "your_user";
+$PASSWORD = "your_password";
+
+?>
